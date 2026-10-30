@@ -1,5 +1,9 @@
 
 import { MongoClient } from 'mongodb';
+import dns from 'node:dns';
+
+// Utilizar los DNS de Google
+dns.setServers(['8.8.8.8', '8.8.4.4']);
 
 let database;
 
