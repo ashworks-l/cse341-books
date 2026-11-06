@@ -13,7 +13,7 @@
   "license": "ISC",
   "author": "Ashley",
   "type": "module",
-  "main": "sever.js",
+  "main": "server.js",
   "scripts": {
     "start": "node --env-file=.env server.js",
     "dev": "nodemon --env-file=.env server.js",
