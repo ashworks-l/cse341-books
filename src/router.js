@@ -1,8 +1,12 @@
+
 import express from 'express';
 
 import {
   getBooksHandler,
   getBookByIdHandler,
+  createBookHandler,
+  updateBookHandler,
+  deleteBookHandler,
 } from './controllers/books.js';
 
 import {
@@ -52,6 +56,90 @@ router.get('/books', getBooksHandler);
  *         description: Server error
  */
 router.get('/books/:id', getBookByIdHandler);
+
+/**
+ * @openapi
+ * /books:
+ *   post:
+ *     summary: Create a new book
+ *     tags:
+ *       - Books
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - id
+ *               - title
+ *               - authorId
+ *             properties:
+ *               id:
+ *                 type: string
+ *               title:
+ *                 type: string
+ *               authorId:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Book created
+ *       400:
+ *         description: Invalid request or author does not exist
+ *       409:
+ *         description: Book already exists
+ */
+router.post('/books', createBookHandler);
+
+/**
+ * @openapi
+ * /books/{id}:
+ *   put:
+ *     summary: Update a book
+ *     tags:
+ *       - Books
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *     responses:
+ *       200:
+ *         description: Book updated
+ *       400:
+ *         description: Author does not exist
+ *       404:
+ *         description: Book not found
+ */
+router.put('/books/:id', updateBookHandler);
+
+/**
+ * @openapi
+ * /books/{id}:
+ *   delete:
+ *     summary: Delete a book
+ *     tags:
+ *       - Books
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Book deleted
+ *       404:
+ *         description: Book not found
+ */
+router.delete('/books/:id', deleteBookHandler);
 
 /**
  * @openapi
