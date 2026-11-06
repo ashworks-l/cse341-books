@@ -1,9 +1,14 @@
 
 import express from 'express';
+
 import {
   getBooksHandler,
   getBookByIdHandler,
 } from './controllers/books.js';
+
+import {
+  getAuthorsHandler,
+} from './controllers/authors.js';
 
 const router = express.Router();
 
@@ -45,5 +50,20 @@ router.get('/books', getBooksHandler);
  *         description: Server error
  */
 router.get('/books/:id', getBookByIdHandler);
+
+/**
+ * @openapi
+ * /authors:
+ *   get:
+ *     summary: Get all authors
+ *     tags:
+ *       - Authors
+ *     responses:
+ *       200:
+ *         description: Authors retrieved successfully
+ *       500:
+ *         description: Server error
+ */
+router.get('/authors', getAuthorsHandler);
 
 export default router;

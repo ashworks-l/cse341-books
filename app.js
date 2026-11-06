@@ -16,9 +16,22 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use(router);
 
+console.log(
+  'ROUTER ROUTES:',
+  router.stack.map((layer) => layer.route?.path).filter(Boolean)
+);
+
+console.log('ROUTES REGISTERED');
+
 app.get('/', (req, res) => {
   return res.status(200).json({
     message: 'Server is running',
+  });
+});
+
+app.get('/authors-test', (req, res) => {
+  res.status(200).json({
+    message: 'Authors route test works!'
   });
 });
 
