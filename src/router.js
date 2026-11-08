@@ -74,6 +74,7 @@ router.get('/books/:id', getBookByIdHandler);
  *               - id
  *               - title
  *               - authorId
+ *               - publicationDate
  *             properties:
  *               id:
  *                 type: string
@@ -81,13 +82,15 @@ router.get('/books/:id', getBookByIdHandler);
  *                 type: string
  *               authorId:
  *                 type: string
+ *               publicationDate:
+ *                 type: string
  *     responses:
  *       201:
  *         description: Book created
  *       400:
- *         description: Invalid request or author does not exist
- *       409:
- *         description: Book already exists
+ *         description: Invalid request, duplicate book ID, or author does not exist
+ *       500:
+ *         description: Server error
  */
 router.post('/books', createBookHandler);
 
@@ -110,13 +113,26 @@ router.post('/books', createBookHandler);
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - authorId
+ *               - title
+ *               - publicationDate
+ *             properties:
+ *               authorId:
+ *                 type: string
+ *               title:
+ *                 type: string
+ *               publicationDate:
+ *                 type: string
  *     responses:
  *       200:
  *         description: Book updated
  *       400:
- *         description: Author does not exist
+ *         description: Invalid request or author does not exist
  *       404:
  *         description: Book not found
+ *       500:
+ *         description: Server error
  */
 router.put('/books/:id', updateBookHandler);
 
@@ -134,10 +150,12 @@ router.put('/books/:id', updateBookHandler);
  *         schema:
  *           type: string
  *     responses:
- *       200:
+ *       204:
  *         description: Book deleted
  *       404:
  *         description: Book not found
+ *       500:
+ *         description: Server error
  */
 router.delete('/books/:id', deleteBookHandler);
 
@@ -172,8 +190,12 @@ router.get('/authors', getAuthorsHandler);
  *     responses:
  *       200:
  *         description: Author retrieved successfully
+ *       400:
+ *         description: Missing required fields
  *       404:
  *         description: Author not found
+ *       500:
+ *         description: Server error
  */
 router.get('/authors/:id', getAuthorByIdHandler);
 
@@ -206,6 +228,8 @@ router.get('/authors/:id', getAuthorByIdHandler);
  *         description: Author created
  *       400:
  *         description: Invalid request
+ *       500:
+ *         description: Server error
  */
 router.post('/authors', createAuthorHandler);
 
@@ -236,8 +260,12 @@ router.post('/authors', createAuthorHandler);
  *     responses:
  *       200:
  *         description: Author updated
+ *       400:
+ *         description: Missing required fields
  *       404:
  *         description: Author not found
+ *       500:
+ *         description: Server error
  */
 router.put('/authors/:id', updateAuthorHandler);
 
@@ -261,6 +289,8 @@ router.put('/authors/:id', updateAuthorHandler);
  *         description: Author not found
  *       409:
  *         description: Author has books
+ *       500:
+ *         description: Server error
  */
 router.delete('/authors/:id', deleteAuthorHandler);
 

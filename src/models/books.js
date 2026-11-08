@@ -1,3 +1,4 @@
+
 import { getDb } from '../db/connect.js';
 
 const getAllBooks = async () => {
@@ -26,14 +27,18 @@ const createBook = async (book) => {
 const updateBook = async (id, book) => {
   await getDb().collection('books').updateOne(
     { id },
-    { $set: book }
+    {
+      $set: book,
+      $unset: { author: '' }
+    }
   );
 
   return { id, ...book };
 };
 
 const deleteBook = async (id) => {
-  return await getDb().collection('books').deleteOne({ id });
+  const result = await getDb().collection('books').deleteOne({ id });
+  return result;
 };
 
 export {

@@ -41,7 +41,8 @@
                 "required": [
                   "id",
                   "title",
-                  "authorId"
+                  "authorId",
+                  "publicationDate"
                 ],
                 "properties": {
                   "id": {
@@ -51,6 +52,9 @@
                     "type": "string"
                   },
                   "authorId": {
+                    "type": "string"
+                  },
+                  "publicationDate": {
                     "type": "string"
                   }
                 }
@@ -63,10 +67,10 @@
             "description": "Book created"
           },
           "400": {
-            "description": "Invalid request or author does not exist"
+            "description": "Invalid request, duplicate book ID, or author does not exist"
           },
-          "409": {
-            "description": "Book already exists"
+          "500": {
+            "description": "Server error"
           }
         }
       }
@@ -119,7 +123,23 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object"
+                "type": "object",
+                "required": [
+                  "authorId",
+                  "title",
+                  "publicationDate"
+                ],
+                "properties": {
+                  "authorId": {
+                    "type": "string"
+                  },
+                  "title": {
+                    "type": "string"
+                  },
+                  "publicationDate": {
+                    "type": "string"
+                  }
+                }
               }
             }
           }
@@ -129,10 +149,13 @@
             "description": "Book updated"
           },
           "400": {
-            "description": "Author does not exist"
+            "description": "Invalid request or author does not exist"
           },
           "404": {
             "description": "Book not found"
+          },
+          "500": {
+            "description": "Server error"
           }
         }
       },
@@ -152,11 +175,14 @@
           }
         ],
         "responses": {
-          "200": {
+          "204": {
             "description": "Book deleted"
           },
           "404": {
             "description": "Book not found"
+          },
+          "500": {
+            "description": "Server error"
           }
         }
       }
@@ -213,6 +239,9 @@
           },
           "400": {
             "description": "Invalid request"
+          },
+          "500": {
+            "description": "Server error"
           }
         }
       }
@@ -237,8 +266,14 @@
           "200": {
             "description": "Author retrieved successfully"
           },
+          "400": {
+            "description": "Missing required fields"
+          },
           "404": {
             "description": "Author not found"
+          },
+          "500": {
+            "description": "Server error"
           }
         }
       },
@@ -279,8 +314,14 @@
           "200": {
             "description": "Author updated"
           },
+          "400": {
+            "description": "Missing required fields"
+          },
           "404": {
             "description": "Author not found"
+          },
+          "500": {
+            "description": "Server error"
           }
         }
       },
@@ -308,6 +349,9 @@
           },
           "409": {
             "description": "Author has books"
+          },
+          "500": {
+            "description": "Server error"
           }
         }
       }
