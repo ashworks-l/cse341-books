@@ -1,4 +1,3 @@
-
 import {
   getAllBooks,
   getBookById,
@@ -41,15 +40,15 @@ const getBookByIdHandler = async (req, res) => {
 
 const createBookHandler = async (req, res) => {
   try {
-    const book = req.body;
+    const { id, authorId, title, publicationDate } = req.body;
 
-    if (!book.id || !book.title || !book.authorId) {
+    if (!id || !authorId || !title || !publicationDate) {
       return res.status(400).json({
-        message: 'id, title and authorId are required'
+        message: 'id, authorId, title and publicationDate are required'
       });
     }
 
-    const exists = await authorExists(book.authorId);
+    const exists = await authorExists(authorId);
 
     if (!exists) {
       return res.status(400).json({
@@ -57,17 +56,19 @@ const createBookHandler = async (req, res) => {
       });
     }
 
-    const existingBook = await getBookById(book.id);
+    const existingBook = await getBookById(id);
 
     if (existingBook) {
-      return res.status(409).json({
+      return res.status(400).json({
         message: 'Book already exists'
       });
     }
 
-    await createBook(book);
+    const newBook = { id, authorId, title, publicationDate };
 
-    return res.status(201).json(book);
+    await createBook(newBook);
+
+    return res.status(201).json(newBook);
   } catch (error) {
     console.error('Error creating book:', error.message);
     return res.status(500).json({
@@ -78,8 +79,8 @@ const createBookHandler = async (req, res) => {
 
 const updateBookHandler = async (req, res) => {
   try {
-    const id = req.params.id;
-    const book = req.body;
+    const { id } = req.params;
+    const { authorId, title, publicationDate } = req.body;
 
     const existingBook = await getBookById(id);
 
@@ -89,24 +90,27 @@ const updateBookHandler = async (req, res) => {
       });
     }
 
-    if (book.authorId) {
-      const exists = await authorExists(book.authorId);
-
-      if (!exists) {
-        return res.status(400).json({
-          message: 'Author does not exist'
-        });
-      }
+    if (!authorId || !title || !publicationDate) {
+      return res.status(400).json({
+        message: 'authorId, title and publicationDate are required'
+      });
     }
 
-    delete book._id;
-    delete book.id;
+    const exists = await authorExists(authorId);
 
-    await updateBook(id, book);
+    if (!exists) {
+      return res.status(400).json({
+        message: 'Author does not exist'
+      });
+    }
+
+    const updatedBook = { authorId, title, publicationDate };
+
+    await updateBook(id, updatedBook);
 
     return res.status(200).json({
       id,
-      ...book
+      ...updatedBook
     });
   } catch (error) {
     console.error('Error updating book:', error.message);
@@ -118,7 +122,7 @@ const updateBookHandler = async (req, res) => {
 
 const deleteBookHandler = async (req, res) => {
   try {
-    const id = req.params.id;
+    const { id } = req.params;
 
     const existingBook = await getBookById(id);
 
@@ -130,9 +134,7 @@ const deleteBookHandler = async (req, res) => {
 
     await deleteBook(id);
 
-    return res.status(200).json({
-      message: 'Book deleted successfully'
-    });
+    return res.status(204).send();
   } catch (error) {
     console.error('Error deleting book:', error.message);
     return res.status(500).json({
